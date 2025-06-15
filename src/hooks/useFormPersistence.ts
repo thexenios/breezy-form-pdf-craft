@@ -30,7 +30,7 @@ export const useFormPersistence = () => {
         const { error } = await supabase
           .from('form_responses')
           .update({
-            form_data: formData,
+            form_data: formData as any,
             completed,
             updated_at: new Date().toISOString()
           })
@@ -44,7 +44,7 @@ export const useFormPersistence = () => {
           .from('form_responses')
           .insert({
             user_id: user.id,
-            form_data: formData,
+            form_data: formData as any,
             completed
           })
           .select('id')

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ArrowRight, FileText, MessageSquare, Target, Heart, User, Lightbulb, LogIn, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -41,11 +40,10 @@ const LandingPage = ({ onStartForm }: LandingPageProps) => {
           ) : (
             <Button
               onClick={() => setShowAuthDialog(true)}
-              variant="outline"
-              className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white"
+              className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white"
             >
               <LogIn className="w-4 h-4 mr-2" />
-              Sign In
+              Sign Up / Sign In
             </Button>
           )}
         </div>
