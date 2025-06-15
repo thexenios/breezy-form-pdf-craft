@@ -1,15 +1,56 @@
 
-import React from 'react';
-import { ArrowRight, FileText, MessageSquare, Target, Heart, User, Lightbulb } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, FileText, MessageSquare, Target, Heart, User, Lightbulb, LogIn, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import AuthDialog from '@/components/AuthDialog';
 
 interface LandingPageProps {
   onStartForm: () => void;
 }
 
 const LandingPage = ({ onStartForm }: LandingPageProps) => {
+  const { user, signOut } = useAuth();
+  const [showAuthDialog, setShowAuthDialog] = useState(false);
+
+  const handleStartForm = () => {
+    if (user) {
+      onStartForm();
+    } else {
+      setShowAuthDialog(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white">
+      {/* Header with Auth */}
+      <div className="container mx-auto px-4 py-4">
+        <div className="flex justify-end">
+          {user ? (
+            <div className="flex items-center space-x-4">
+              <span className="text-gray-300">Welcome, {user.email}</span>
+              <Button
+                onClick={signOut}
+                variant="outline"
+                className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
+          ) : (
+            <Button
+              onClick={() => setShowAuthDialog(true)}
+              variant="outline"
+              className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white"
+            >
+              <LogIn className="w-4 h-4 mr-2" />
+              Sign In
+            </Button>
+          )}
+        </div>
+      </div>
+
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-4xl mx-auto text-center">
@@ -23,13 +64,18 @@ const LandingPage = ({ onStartForm }: LandingPageProps) => {
             This isn't a personality test or a marketing checklist; it's a conversation starter with yourself. 
             Whether you're building a personal brand, freelancing, launching something new, or want to 
             better express your values, this guide is designed to help you discover your authentic voice.
+            {user && (
+              <span className="block mt-4 text-[#c65d21] font-medium">
+                Sign in to save your progress and come back to edit your guide anytime!
+              </span>
+            )}
           </p>
           
           <Button 
-            onClick={onStartForm}
+            onClick={handleStartForm}
             className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
           >
-            Start Your Guide
+            {user ? 'Continue Your Guide' : 'Start Your Guide'}
             <ArrowRight className="w-5 h-5 ml-2" />
           </Button>
         </div>
@@ -156,15 +202,20 @@ const LandingPage = ({ onStartForm }: LandingPageProps) => {
             </p>
             
             <Button 
-              onClick={onStartForm}
+              onClick={handleStartForm}
               className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
-              Begin Your Journey
+              {user ? 'Continue Your Journey' : 'Begin Your Journey'}
               <ArrowRight className="w-5 h-5 ml-2" />
             </Button>
           </div>
         </div>
       </div>
+
+      <AuthDialog 
+        isOpen={showAuthDialog} 
+        onClose={() => setShowAuthDialog(false)} 
+      />
     </div>
   );
 };

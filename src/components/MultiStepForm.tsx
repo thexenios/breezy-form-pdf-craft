@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
-import { ChevronLeft, ChevronRight, Download, FileText, MessageSquare, Target, Heart, User, Lightbulb, CheckCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight, Download, FileText, MessageSquare, Target, Heart, User, Lightbulb, CheckCircle, Save } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
+import { useFormPersistence } from '@/hooks/useFormPersistence';
 import jsPDF from 'jspdf';
 
 interface FormData {
@@ -23,6 +25,8 @@ interface MultiStepFormProps {
 }
 
 const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
+  const { user } = useAuth();
+  const { saveFormData, loadFormData } = useFormPersistence();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>({
     vision: '',
@@ -36,8 +40,24 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
     antiVoice: ''
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isLoading, setIsLoading] = useState(true);
 
   const totalSteps = 10;
+
+  // Load saved form data when component mounts
+  useEffect(() => {
+    const loadSavedData = async () => {
+      if (user) {
+        const { formData: savedData } = await loadFormData();
+        if (savedData) {
+          setFormData(savedData);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    loadSavedData();
+  }, [user, loadFormData]);
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -97,6 +117,10 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
   const nextStep = () => {
     if (validateStep(currentStep)) {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+      // Auto-save progress for logged-in users
+      if (user) {
+        saveFormData(formData, false);
+      }
     }
   };
 
@@ -111,7 +135,13 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
     }
   };
 
-  const generatePDF = () => {
+  const handleSaveProgress = async () => {
+    if (user) {
+      await saveFormData(formData, false);
+    }
+  };
+
+  const generatePDF = async () => {
     const doc = new jsPDF();
     
     // Add title
@@ -153,6 +183,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
     addSection('Your Voice:', formData.voice);
     addSection('A Phrase That Sounds Like You:', formData.phraseSound);
     addSection('Your Anti-Voice:', formData.antiVoice);
+    
+    // Save as completed if user is logged in
+    if (user) {
+      await saveFormData(formData, true);
+    }
     
     // Save the PDF
     doc.save('personal_communication_guide.pdf');
@@ -206,11 +241,19 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#1a1a1a] flex items-center justify-center">
+        <div className="text-white text-lg">Loading your guide...</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#1a1a1a] py-8 px-4">
       <div className="max-w-2xl mx-auto">
         {/* Back to landing button */}
-        <div className="mb-8">
+        <div className="mb-8 flex justify-between items-center">
           <Button
             onClick={onBackToLanding}
             variant="outline"
@@ -219,6 +262,17 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
             <ChevronLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
+          
+          {user && currentStep < 10 && (
+            <Button
+              onClick={handleSaveProgress}
+              variant="outline"
+              className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save Progress
+            </Button>
+          )}
         </div>
 
         {/* Progress Bar */}
