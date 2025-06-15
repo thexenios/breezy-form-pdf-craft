@@ -214,7 +214,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
           <Button
             onClick={onBackToLanding}
             variant="outline"
-            className="bg-[#1a1a1a] border-gray-800 text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+            className="bg-[#1a1a1a] border-[#1a1a1a] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Back to Home
