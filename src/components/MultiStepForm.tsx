@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Download, FileText, MessageSquare, Target, Heart, User, Lightbulb, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -498,7 +497,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 onClick={prevStep}
                 disabled={currentStep === 1}
                 variant="outline"
-                className="px-6 py-3 text-lg disabled:opacity-50 border-gray-600 text-gray-300 hover:bg-gray-700"
+                className="px-6 py-3 text-lg disabled:opacity-50 bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
               >
                 <ChevronLeft className="w-4 h-4 mr-2" />
                 Back
