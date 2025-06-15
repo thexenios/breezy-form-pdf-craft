@@ -215,7 +215,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
           <Button
             onClick={onBackToLanding}
             variant="outline"
-            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+            className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
             Back to Home
@@ -518,7 +518,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
               <Button
                 onClick={prevStep}
                 variant="outline"
-                className="px-6 py-3 text-lg border-gray-600 text-gray-300 hover:bg-gray-700"
+                className="px-6 py-3 text-lg bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
               >
                 <ChevronLeft className="w-4 h-4 mr-2" />
                 Back to Edit
