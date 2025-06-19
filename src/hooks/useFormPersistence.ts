@@ -87,7 +87,7 @@ export const useFormPersistence = () => {
 
       if (data) {
         setSavedFormId(data.id);
-        return { formData: data.form_data as FormData, formId: data.id };
+        return { formData: data.form_data as unknown as FormData, formId: data.id };
       }
 
       return { formData: null, formId: null };
