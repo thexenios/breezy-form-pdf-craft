@@ -129,7 +129,12 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
   };
 
   const updateFormData = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    console.log(`Updating ${field} with value:`, value);
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      console.log('Updated form data:', updated);
+      return updated;
+    });
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -325,10 +330,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="vision" className="text-lg font-medium text-white">Your Vision</Label>
                 <Textarea
                   id="vision"
+                  name="vision"
                   placeholder="What's the change you want to see in the world? Paint a picture of the future you're working toward. This is your north star."
                   value={formData.vision}
                   onChange={(e) => updateFormData('vision', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.vision ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.vision ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.vision && (
@@ -343,10 +349,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="mission" className="text-lg font-medium text-white">Your Mission</Label>
                 <Textarea
                   id="mission"
+                  name="mission"
                   placeholder="What actions do you take (or plan to take) every day to bring that vision closer? These are the concrete steps and behaviors that move you forward."
                   value={formData.mission}
                   onChange={(e) => updateFormData('mission', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.mission ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.mission ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.mission && (
@@ -361,10 +368,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="why" className="text-lg font-medium text-white">Your Why</Label>
                 <Textarea
                   id="why"
+                  name="why"
                   placeholder="Why does this matter to you on a deeper, personal level? What experience, belief, or conviction drives this work? This is your reason for existing."
                   value={formData.why}
                   onChange={(e) => updateFormData('why', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.why ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.why ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.why && (
@@ -379,10 +387,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="values" className="text-lg font-medium text-white">Your Core Values</Label>
                 <Textarea
                   id="values"
+                  name="values"
                   placeholder="List 3-5 values that feel non-negotiable in how you live or work. What principles guide your decisions and actions?"
                   value={formData.values}
                   onChange={(e) => updateFormData('values', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.values ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.values ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.values && (
@@ -397,10 +406,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="valuesInAction" className="text-lg font-medium text-white">Your Values in Action</Label>
                 <Textarea
                   id="valuesInAction"
+                  name="valuesInAction"
                   placeholder="Choose one value and describe how you live it. What does it look or sound like in practice? Give specific examples of how this value shows up in your work or life."
                   value={formData.valuesInAction}
                   onChange={(e) => updateFormData('valuesInAction', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.valuesInAction ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.valuesInAction ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.valuesInAction && (
@@ -415,10 +425,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="antiValues" className="text-lg font-medium text-white">Your Anti-Values</Label>
                 <Textarea
                   id="antiValues"
+                  name="antiValues"
                   placeholder="What do you not want to be known for, even if it's trendy or expected? These are not always bad, just things that oppose your listed values and don't align with who you are."
                   value={formData.antiValues}
                   onChange={(e) => updateFormData('antiValues', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.antiValues ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.antiValues ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.antiValues && (
@@ -433,10 +444,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="voice" className="text-lg font-medium text-white">Your Voice</Label>
                 <Textarea
                   id="voice"
+                  name="voice"
                   placeholder="How should your voice feel? Pick 2-3 traits that describe how your words should come across (warm, clear, curious, grounded, playful, bold, direct, etc.)."
                   value={formData.voice}
                   onChange={(e) => updateFormData('voice', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.voice ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.voice ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.voice && (
@@ -451,10 +463,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="phraseSound" className="text-lg font-medium text-white">A Phrase That Sounds Like You</Label>
                 <Textarea
                   id="phraseSound"
+                  name="phraseSound"
                   placeholder="Drop in a sentence or saying that feels natural and true to your voice. What do you find yourself saying often? What phrases come naturally to you?"
                   value={formData.phraseSound}
                   onChange={(e) => updateFormData('phraseSound', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.phraseSound ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.phraseSound ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.phraseSound && (
@@ -469,10 +482,11 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                 <Label htmlFor="antiVoice" className="text-lg font-medium text-white">Your Anti-Voice</Label>
                 <Textarea
                   id="antiVoice"
+                  name="antiVoice"
                   placeholder="Any language, energy, or communication habits that don't reflect who you are? What tone or style doesn't fit you? (These aren't necessarily bad traits, just not you)"
                   value={formData.antiVoice}
                   onChange={(e) => updateFormData('antiVoice', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 ${errors.antiVoice ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.antiVoice ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.antiVoice && (
