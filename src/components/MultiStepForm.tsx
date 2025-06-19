@@ -22,9 +22,11 @@ interface FormData {
 
 interface MultiStepFormProps {
   onBackToLanding: () => void;
+  onBackToProfile: () => void;
+  editingFormId?: string;
 }
 
-const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
+const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: MultiStepFormProps) => {
   const { user } = useAuth();
   const { saveFormData, loadFormData } = useFormPersistence();
   const [currentStep, setCurrentStep] = useState(1);
@@ -41,23 +43,25 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isLoading, setIsLoading] = useState(true);
+  const [currentFormId, setCurrentFormId] = useState<string | null>(editingFormId || null);
 
   const totalSteps = 10;
 
-  // Load saved form data when component mounts
+  // Load form data when component mounts
   useEffect(() => {
     const loadSavedData = async () => {
       if (user) {
-        const { formData: savedData } = await loadFormData();
+        const { formData: savedData, formId } = await loadFormData(editingFormId);
         if (savedData) {
           setFormData(savedData);
+          setCurrentFormId(formId);
         }
       }
       setIsLoading(false);
     };
 
     loadSavedData();
-  }, [user, loadFormData]);
+  }, [user, editingFormId]);
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -119,7 +123,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
       // Auto-save progress for logged-in users
       if (user) {
-        saveFormData(formData, false);
+        saveFormData(formData, false, currentFormId || undefined);
       }
     }
   };
@@ -142,7 +146,10 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
 
   const handleSaveProgress = async () => {
     if (user) {
-      await saveFormData(formData, false);
+      const savedId = await saveFormData(formData, false, currentFormId || undefined);
+      if (savedId && !currentFormId) {
+        setCurrentFormId(savedId);
+      }
     }
   };
 
@@ -191,13 +198,14 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
     
     // Save as completed if user is logged in
     if (user) {
-      await saveFormData(formData, true);
+      await saveFormData(formData, true, currentFormId || undefined);
     }
     
     // Save the PDF
     doc.save('personal_communication_guide.pdf');
   };
 
+  // ... keep existing code (getStepIcon, getStepTitle, getStepDescription functions)
   const getStepIcon = (step: number) => {
     switch (step) {
       case 1: return '🎯';
@@ -257,15 +265,15 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
   return (
     <div className="min-h-screen bg-[#1a1a1a] py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        {/* Back to landing button */}
+        {/* Back button */}
         <div className="mb-8 flex justify-between items-center">
           <Button
-            onClick={onBackToLanding}
+            onClick={user ? onBackToProfile : onBackToLanding}
             variant="outline"
             className="bg-[#1a1a1a] border-[#1a1a1a] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
           >
             <ChevronLeft className="w-4 h-4 mr-2" />
-            Back to Home
+            {user ? 'Back to Profile' : 'Back to Home'}
           </Button>
           
           {user && currentStep < 10 && (
@@ -353,7 +361,7 @@ const MultiStepForm = ({ onBackToLanding }: MultiStepFormProps) => {
                   placeholder="What actions do you take (or plan to take) every day to bring that vision closer? These are the concrete steps and behaviors that move you forward."
                   value={formData.mission}
                   onChange={(e) => updateFormData('mission', e.target.value)}
-                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21] ${errors.mission ? 'border-red-500' : ''}`}
+                  className={`text-lg min-h-32 bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-[#c65d21] focus:ring-[#c65d21]  ${errors.mission ? 'border-red-500' : ''}`}
                   autoFocus
                 />
                 {errors.mission && (

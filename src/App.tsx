@@ -1,31 +1,69 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/contexts/AuthContext";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
+import { useState } from 'react';
+import { Toaster } from '@/components/ui/toaster';
+import { AuthProvider } from '@/contexts/AuthContext';
+import LandingPage from '@/components/LandingPage';
+import MultiStepForm from '@/components/MultiStepForm';
+import Profile from '@/components/Profile';
+import './App.css';
 
-const queryClient = new QueryClient();
+type AppState = 'landing' | 'form' | 'profile';
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+function App() {
+  const [currentView, setCurrentView] = useState<AppState>('landing');
+  const [editingFormId, setEditingFormId] = useState<string | undefined>();
+
+  const handleStartForm = () => {
+    setEditingFormId(undefined);
+    setCurrentView('form');
+  };
+
+  const handleShowProfile = () => {
+    setCurrentView('profile');
+  };
+
+  const handleEditForm = (formId: string) => {
+    setEditingFormId(formId);
+    setCurrentView('form');
+  };
+
+  const handleBackToLanding = () => {
+    setEditingFormId(undefined);
+    setCurrentView('landing');
+  };
+
+  const handleBackToProfile = () => {
+    setEditingFormId(undefined);
+    setCurrentView('profile');
+  };
+
+  return (
     <AuthProvider>
-      <TooltipProvider>
+      <div className="min-h-screen">
+        {currentView === 'landing' && (
+          <LandingPage 
+            onStartForm={handleStartForm}
+            onShowProfile={handleShowProfile}
+          />
+        )}
+        {currentView === 'form' && (
+          <MultiStepForm 
+            onBackToLanding={handleBackToLanding}
+            onBackToProfile={handleBackToProfile}
+            editingFormId={editingFormId}
+          />
+        )}
+        {currentView === 'profile' && (
+          <Profile 
+            onEditForm={handleEditForm}
+            onCreateForm={handleStartForm}
+            onBackToLanding={handleBackToLanding}
+          />
+        )}
         <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      </div>
     </AuthProvider>
-  </QueryClientProvider>
-);
+  );
+}
 
 export default App;

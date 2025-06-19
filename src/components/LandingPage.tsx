@@ -1,218 +1,246 @@
+
 import React, { useState } from 'react';
-import { ArrowRight, FileText, MessageSquare, Target, Heart, User, Lightbulb, LogIn, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { FileText, CheckCircle, User, UserCircle } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthDialog from '@/components/AuthDialog';
 
 interface LandingPageProps {
   onStartForm: () => void;
+  onShowProfile: () => void;
 }
 
-const LandingPage = ({ onStartForm }: LandingPageProps) => {
-  const { user, signOut } = useAuth();
+const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
+  const { user } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
-
-  const handleStartForm = () => {
-    if (user) {
-      onStartForm();
-    } else {
-      setShowAuthDialog(true);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white">
-      {/* Header with Auth */}
-      <div className="container mx-auto px-4 py-4">
-        <div className="flex justify-end">
-          {user ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-gray-300">Welcome, {user.email}</span>
+      {/* Header */}
+      <header className="px-4 py-6">
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <FileText className="w-8 h-8 text-[#c65d21]" />
+            <span className="text-xl font-bold">Communication Guide</span>
+          </div>
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <>
+                <Button
+                  onClick={onShowProfile}
+                  variant="outline"
+                  className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+                >
+                  <UserCircle className="w-4 h-4 mr-2" />
+                  My Profile
+                </Button>
+              </>
+            ) : (
               <Button
-                onClick={signOut}
+                onClick={() => setShowAuthDialog(true)}
                 variant="outline"
-                className="bg-[#1a1a1a] border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white"
+                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
               >
-                <LogOut className="w-4 h-4 mr-2" />
-                Sign Out
+                Sign Up / Sign In
               </Button>
-            </div>
-          ) : (
-            <Button
-              onClick={() => setShowAuthDialog(true)}
-              className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white"
-            >
-              <LogIn className="w-4 h-4 mr-2" />
-              Sign Up / Sign In
-            </Button>
-          )}
+            )}
+          </div>
         </div>
-      </div>
+      </header>
 
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
+      <section className="px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
+          <Badge variant="outline" className="mb-6 border-[#c65d21] text-[#c65d21] bg-[#c65d21]/10">
+            ✨ Free Communication Guide Builder
+          </Badge>
+          
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
-            Find Your Voice
+            Define Your Voice.<br />
+            <span className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] bg-clip-text text-transparent">
+              Own Your Message.
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 leading-relaxed">
-            A Communication Guide to Help You Get Clarity on Your Vision, Mission, and Why
-          </p>
-          <p className="text-lg text-gray-400 mb-12 max-w-3xl mx-auto">
-            This isn't a personality test or a marketing checklist; it's a conversation starter with yourself. 
-            Whether you're building a personal brand, freelancing, launching something new, or want to 
-            better express your values, this guide is designed to help you discover your authentic voice.
-            {user && (
-              <span className="block mt-4 text-[#c65d21] font-medium">
-                Sign in to save your progress and come back to edit your guide anytime!
-              </span>
-            )}
+          
+          <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+            Create a personalized communication guide that captures your authentic voice, 
+            values, and message. Perfect for professionals, creators, and leaders who want 
+            to communicate with clarity and impact.
           </p>
           
-          <Button 
-            onClick={handleStartForm}
-            className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            {user ? 'Continue Your Guide' : 'Start Your Guide'}
-            <ArrowRight className="w-5 h-5 ml-2" />
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              onClick={onStartForm}
+              size="lg"
+              className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <FileText className="w-5 h-5 mr-2" />
+              Create Your Guide - Free
+            </Button>
+            
+            {user && (
+              <Button
+                onClick={onShowProfile}
+                size="lg"
+                variant="outline"
+                className="bg-transparent border-2 border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
+              >
+                <User className="w-5 h-5 mr-2" />
+                View My Guides
+              </Button>
+            )}
+          </div>
+          
+          <p className="text-sm text-gray-400 mt-4">
+            No signup required • Takes 10-15 minutes • Download as PDF
+          </p>
         </div>
-      </div>
+      </section>
 
-      {/* What You'll Discover Section */}
-      <div className="bg-gray-800/50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">What You'll Discover</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center p-6">
-                <div className="bg-[#c65d21] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Target className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Get Clarity</h3>
-                <p className="text-gray-300">Define your vision, mission, and why with guided reflection</p>
+      {/* Features Section */}
+      <section className="px-4 py-20 bg-gray-900/30">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+              Everything You Need to Define Your Voice
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Our guided process helps you discover and articulate what makes your communication unique and effective.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 hover:border-[#c65d21]/30 transition-colors">
+              <div className="w-12 h-12 bg-[#c65d21]/20 rounded-lg flex items-center justify-center mb-6">
+                <FileText className="w-6 h-6 text-[#c65d21]" />
               </div>
-              <div className="text-center p-6">
-                <div className="bg-[#c65d21] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Define Your Values</h3>
-                <p className="text-gray-300">Identify the values that matter most and how you live them</p>
+              <h3 className="text-xl font-semibold mb-4 text-white">Comprehensive Framework</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Explore your vision, mission, values, and voice through our proven 9-step framework 
+                designed by communication experts.
+              </p>
+            </div>
+
+            <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 hover:border-[#c65d21]/30 transition-colors">
+              <div className="w-12 h-12 bg-[#c65d21]/20 rounded-lg flex items-center justify-center mb-6">
+                <CheckCircle className="w-6 h-6 text-[#c65d21]" />
               </div>
-              <div className="text-center p-6">
-                <div className="bg-[#c65d21] w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <MessageSquare className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Find Your Voice</h3>
-                <p className="text-gray-300">Discover how you naturally communicate and show up</p>
+              <h3 className="text-xl font-semibold mb-4 text-white">Instant PDF Export</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Get your personalized communication guide as a beautifully formatted PDF 
+                that you can reference anytime, anywhere.
+              </p>
+            </div>
+
+            <div className="bg-gray-800/50 rounded-2xl p-8 border border-gray-700 hover:border-[#c65d21]/30 transition-colors">
+              <div className="w-12 h-12 bg-[#c65d21]/20 rounded-lg flex items-center justify-center mb-6">
+                <User className="w-6 h-6 text-[#c65d21]" />
               </div>
+              <h3 className="text-xl font-semibold mb-4 text-white">Save & Continue</h3>
+              <p className="text-gray-300 leading-relaxed">
+                Create an account to save your progress, edit your guide anytime, 
+                and create multiple communication frameworks.
+              </p>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* How It Works Section */}
-      <div className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How It Works</h2>
-            <div className="space-y-8">
-              <div className="flex items-start space-x-4">
-                <div className="bg-[#c65d21] w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-white font-bold text-sm">1</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Reflect on Your Story</h3>
-                  <p className="text-gray-300">Share your background, experiences, and what drives you</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="bg-[#c65d21] w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-white font-bold text-sm">2</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Define Your Vision & Values</h3>
-                  <p className="text-gray-300">Articulate your vision for the future and core values</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="bg-[#c65d21] w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-white font-bold text-sm">3</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Discover Your Voice</h3>
-                  <p className="text-gray-300">Identify your communication style and authentic expression</p>
-                </div>
-              </div>
-              <div className="flex items-start space-x-4">
-                <div className="bg-[#c65d21] w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1">
-                  <span className="text-white font-bold text-sm">4</span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold mb-2">Get Your Personal Guide</h3>
-                  <p className="text-gray-300">Receive a personalized PDF with all your insights</p>
-                </div>
-              </div>
-            </div>
+      <section className="px-4 py-20">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+              How It Works
+            </h2>
+            <p className="text-lg text-gray-300">
+              Simple steps to create your personalized communication guide
+            </p>
           </div>
-        </div>
-      </div>
 
-      {/* Use Cases Section */}
-      <div className="bg-gray-800/50 py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Perfect For</h2>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="bg-gray-700/50 p-6 rounded-lg">
-                <User className="w-8 h-8 text-[#c65d21] mb-3" />
-                <h3 className="text-lg font-semibold mb-2">Personal Branding</h3>
-                <p className="text-gray-300">Create a communication guide to help others understand you better</p>
+          <div className="space-y-8">
+            <div className="flex items-start space-x-6">
+              <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                1
               </div>
-              <div className="bg-gray-700/50 p-6 rounded-lg">
-                <Lightbulb className="w-8 h-8 text-[#c65d21] mb-3" />
-                <h3 className="text-lg font-semibold mb-2">AI Collaboration</h3>
-                <p className="text-gray-300">Use your guide as context for AI tools like ChatGPT to match your voice</p>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Define Your Foundation</h3>
+                <p className="text-gray-300">Start by exploring your vision, mission, and core purpose. What drives you and what change do you want to see?</p>
               </div>
-              <div className="bg-gray-700/50 p-6 rounded-lg">
-                <Target className="w-8 h-8 text-[#c65d21] mb-3" />
-                <h3 className="text-lg font-semibold mb-2">Decision Making</h3>
-                <p className="text-gray-300">Reference your values and voice to check alignment with your choices</p>
+            </div>
+
+            <div className="flex items-start space-x-6">
+              <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                2
               </div>
-              <div className="bg-gray-700/50 p-6 rounded-lg">
-                <FileText className="w-8 h-8 text-[#c65d21] mb-3" />
-                <h3 className="text-lg font-semibold mb-2">Living Document</h3>
-                <p className="text-gray-300">Update and evolve your guide as your clarity deepens over time</p>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Discover Your Values</h3>
+                <p className="text-gray-300">Identify your core values and anti-values. Learn what you stand for and what you actively avoid.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-6">
+              <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                3
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Craft Your Voice</h3>
+                <p className="text-gray-300">Define how you want to sound, what phrases feel natural to you, and what communication styles don't fit.</p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-6">
+              <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
+                4
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-white">Get Your Guide</h3>
+                <p className="text-gray-300">Receive your personalized communication guide as a PDF, ready to reference in all your future communications.</p>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
       {/* CTA Section */}
-      <div className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Find Your Voice?</h2>
-            <p className="text-lg text-gray-300 mb-8">
-              The goal isn't to write something impressive, it's to write something honest. 
-              Start where it feels natural and let your authentic voice emerge.
-            </p>
-            
-            <Button 
-              onClick={handleStartForm}
-              className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-            >
-              {user ? 'Continue Your Journey' : 'Begin Your Journey'}
-              <ArrowRight className="w-5 h-5 ml-2" />
-            </Button>
-          </div>
+      <section className="px-4 py-20 bg-gradient-to-r from-[#c65d21]/10 to-[#e67e22]/10">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
+            Ready to Define Your Voice?
+          </h2>
+          <p className="text-lg text-gray-300 mb-10">
+            Join thousands of professionals who have clarified their communication and amplified their impact.
+          </p>
+          
+          <Button
+            onClick={onStartForm}
+            size="lg"
+            className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] hover:from-[#a04b18] hover:to-[#c65d21] text-white px-8 py-4 text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+          >
+            <FileText className="w-5 h-5 mr-2" />
+            Start Building Your Guide
+          </Button>
         </div>
-      </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="px-4 py-8 bg-gray-900">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="flex items-center justify-center space-x-2 mb-4">
+            <FileText className="w-6 h-6 text-[#c65d21]" />
+            <span className="text-lg font-bold text-white">Communication Guide</span>
+          </div>
+          <p className="text-gray-400">
+            © 2024 Communication Guide. Built with care to help you find your voice.
+          </p>
+        </div>
+      </footer>
 
       <AuthDialog 
         isOpen={showAuthDialog} 
-        onClose={() => setShowAuthDialog(false)} 
+        onClose={() => setShowAuthDialog(false)}
+        onSuccess={() => setShowAuthDialog(false)}
       />
     </div>
   );
