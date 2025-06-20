@@ -22,7 +22,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       <header className="px-4 py-6">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
-            <FileText className="w-8 h-8 text-[#c65d21]" />
+            <FileText className="w-8 h-8 text-[#385f8e]" />
             <span className="text-xl font-bold">Communication Guide</span>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
@@ -110,7 +110,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#385f8e]">
               Everything You Need to Define Your Voice
             </h2>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
@@ -233,7 +233,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       <footer className="px-4 py-8 bg-[#1a1a1a]">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <FileText className="w-6 h-6 text-[#c65d21]" />
+            <FileText className="w-6 h-6 text-[#385f8e]" />
             <span className="text-lg font-bold text-white">Communication Guide</span>
           </div>
           <p className="text-gray-400">

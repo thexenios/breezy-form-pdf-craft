@@ -20,7 +20,7 @@ const About = ({ onBack }: AboutProps) => {
             onClick={onBack}
             className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
           >
-            <FileText className="w-8 h-8 text-[#c65d21]" />
+            <FileText className="w-8 h-8 text-[#385f8e]" />
             <span className="text-xl font-bold">Communication Guide</span>
           </button>
           <div className="flex items-center space-x-2 md:space-x-4">
