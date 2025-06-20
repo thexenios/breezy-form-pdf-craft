@@ -118,7 +118,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Define Your Voice.<br />
-            <span className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] bg-clip-text text-[#385f8e]">
+            <span className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] bg-clip-text text-[#c65d21]">
               Own Your Message.
             </span>
           </h1>
