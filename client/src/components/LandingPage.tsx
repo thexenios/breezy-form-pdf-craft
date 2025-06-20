@@ -174,9 +174,9 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
               <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                 1
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Define Your Foundation</h3>
-                <p className="text-gray-300">Start by exploring your vision, mission, and core purpose. What drives you and what change do you want to see?</p>
+              <div className="text-left">
+                <h3 className="text-xl font-semibold mb-2 text-white text-left">Define Your Foundation</h3>
+                <p className="text-gray-300 text-left">Start by exploring your vision, mission, and core purpose. What drives you and what change do you want to see?</p>
               </div>
             </div>
 
@@ -184,9 +184,9 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
               <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                 2
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Discover Your Values</h3>
-                <p className="text-gray-300">Identify your core values and anti-values. Learn what you stand for and what you actively avoid.</p>
+              <div className="text-left">
+                <h3 className="text-xl font-semibold mb-2 text-white text-left">Discover Your Values</h3>
+                <p className="text-gray-300 text-left">Identify your core values and anti-values. Learn what you stand for and what you actively avoid.</p>
               </div>
             </div>
 
@@ -194,9 +194,9 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
               <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                 3
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Craft Your Voice</h3>
-                <p className="text-gray-300">Define how you want to sound, what phrases feel natural to you, and what communication styles don't fit.</p>
+              <div className="text-left">
+                <h3 className="text-xl font-semibold mb-2 text-white text-left">Craft Your Voice</h3>
+                <p className="text-gray-300 text-left">Define how you want to sound, what phrases feel natural to you, and what communication styles don't fit.</p>
               </div>
             </div>
 
@@ -204,9 +204,9 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
               <div className="w-10 h-10 bg-[#c65d21] rounded-full flex items-center justify-center text-white font-bold text-lg flex-shrink-0">
                 4
               </div>
-              <div>
-                <h3 className="text-xl font-semibold mb-2 text-white">Get Your Guide</h3>
-                <p className="text-gray-300">Receive your personalized communication guide as a PDF, ready to reference in all your future communications.</p>
+              <div className="text-left">
+                <h3 className="text-xl font-semibold mb-2 text-white text-left">Get Your Guide</h3>
+                <p className="text-gray-300 text-left">Receive your personalized communication guide as a PDF, ready to reference in all your future communications.</p>
               </div>
             </div>
           </div>
