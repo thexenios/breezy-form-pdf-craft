@@ -58,7 +58,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </div>
         </div>
       </header>
-
       {/* Hero Section */}
       <section className="px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -68,7 +67,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Define Your Voice.<br />
-            <span className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#c65d21] to-[#e67e22] bg-clip-text text-[#385f8e]">
               Own Your Message.
             </span>
           </h1>
@@ -107,7 +106,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </p>
         </div>
       </section>
-
       {/* Features Section */}
       <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto">
@@ -156,7 +154,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </div>
         </div>
       </section>
-
       {/* How It Works Section */}
       <section className="px-4 py-20">
         <div className="max-w-4xl mx-auto">
@@ -212,7 +209,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </div>
         </div>
       </section>
-
       {/* CTA Section */}
       <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-3xl mx-auto text-center">
@@ -233,7 +229,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </Button>
         </div>
       </section>
-
       {/* Footer */}
       <footer className="px-4 py-8 bg-[#1a1a1a]">
         <div className="max-w-7xl mx-auto text-center">
@@ -246,7 +241,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
           </p>
         </div>
       </footer>
-
       <AuthDialog 
         isOpen={showAuthDialog} 
         onClose={() => setShowAuthDialog(false)}
