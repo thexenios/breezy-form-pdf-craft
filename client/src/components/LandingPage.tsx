@@ -263,7 +263,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       {/* CTA Section */}
       <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#385f8e]">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-[#d9d9d9]">
             Ready to Define Your Voice?
           </h2>
           <p className="text-lg text-gray-300 mb-10">
