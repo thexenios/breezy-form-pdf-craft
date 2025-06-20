@@ -159,10 +159,10 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
     const doc = new jsPDF();
     
     // Set up colors
-    const orangeColor = [198, 93, 33]; // Orange color from your design
-    const whiteColor = [255, 255, 255];
-    const grayColor = [180, 180, 180];
-    const darkBlueColor = [52, 73, 94]; // Dark blue similar to your background
+    const orangeColor: [number, number, number] = [198, 93, 33]; // Orange color from your design
+    const whiteColor: [number, number, number] = [255, 255, 255];
+    const grayColor: [number, number, number] = [180, 180, 180];
+    const darkBlueColor: [number, number, number] = [52, 73, 94]; // Dark blue similar to your background
     
     // Create gradient-like background effect
     doc.setFillColor(65, 105, 145); // Blue background color
@@ -171,16 +171,16 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
     // Add main title "Get to KNOW ME" style
     doc.setFontSize(36);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(...whiteColor);
+    doc.setTextColor(255, 255, 255);
     doc.text('Get to', 20, 40);
     
     doc.setFontSize(48);
-    doc.setTextColor(...orangeColor);
+    doc.setTextColor(198, 93, 33);
     doc.text('KNOW ME', 20, 65);
     
     // Add date in corner
     doc.setFontSize(10);
-    doc.setTextColor(...grayColor);
+    doc.setTextColor(180, 180, 180);
     doc.text(`Created: ${new Date().toLocaleDateString()}`, 150, 20);
     
     let yPosition = 90;
@@ -190,13 +190,13 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
       // Orange title
       doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(...orangeColor);
+      doc.setTextColor(198, 93, 33);
       doc.text(`${title}:`, 20, yPos);
       
       // White content
       doc.setFontSize(11);
       doc.setFont('helvetica', 'normal');
-      doc.setTextColor(...whiteColor);
+      doc.setTextColor(255, 255, 255);
       const splitText = doc.splitTextToSize(content, 85); // Narrower column like your design
       doc.text(splitText, 20, yPos + 8);
       
@@ -227,7 +227,7 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
     // Core Values title
     doc.setFontSize(16);
     doc.setFont('helvetica', 'bold');
-    doc.setTextColor(...orangeColor);
+    doc.setTextColor(198, 93, 33);
     doc.text('Core Values', 20, yPosition);
     yPosition += 20;
     
@@ -244,10 +244,10 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
       const y = yPosition + (row * 40);
       
       // Draw simple pillar representation
-      doc.setFillColor(...orangeColor);
+      doc.setFillColor(198, 93, 33);
       doc.rect(x + 15, y + 15, 20, 8, 'F'); // Top of pillar
       
-      doc.setFillColor(...grayColor);
+      doc.setFillColor(180, 180, 180);
       doc.rect(x + 17, y + 23, 16, 2, 'F'); // Pillar lines
       doc.rect(x + 17, y + 25, 16, 2, 'F');
       doc.rect(x + 17, y + 27, 16, 2, 'F');
@@ -255,7 +255,7 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
       // Value name below pillar
       doc.setFontSize(10);
       doc.setFont('helvetica', 'bold');
-      doc.setTextColor(...orangeColor);
+      doc.setTextColor(198, 93, 33);
       const textWidth = doc.getTextWidth(value);
       doc.text(value, x + 25 - (textWidth / 2), y + 35);
     });

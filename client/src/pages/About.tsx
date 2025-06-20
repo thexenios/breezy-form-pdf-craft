@@ -36,6 +36,15 @@ const About = ({ onBack }: AboutProps) => {
             </p>
           </div>
 
+          {/* Context Above Image */}
+          <div className="text-center mb-8">
+            <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              This Communication Guide Builder was created to help others discover and articulate their unique voice, 
+              just as I've done with my own framework shown below. The tool is designed around the same principles 
+              of curiosity, collaboration, and authenticity that guide my own communication approach.
+            </p>
+          </div>
+
           {/* Image Container */}
           <div className="flex justify-center mb-8">
             <div className="bg-white/5 rounded-2xl p-4 border border-gray-700 hover:border-[#c65d21]/30 transition-colors">
@@ -45,15 +54,6 @@ const About = ({ onBack }: AboutProps) => {
                 className="w-full max-w-3xl h-auto rounded-xl"
               />
             </div>
-          </div>
-
-          {/* Additional Context */}
-          <div className="text-center">
-            <p className="text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              This Communication Guide Builder was created to help others discover and articulate their unique voice, 
-              just as I've done with my own framework shown above. The tool is designed around the same principles 
-              of curiosity, collaboration, and authenticity that guide my own communication approach.
-            </p>
           </div>
         </div>
       </main>
