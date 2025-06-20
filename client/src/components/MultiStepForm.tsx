@@ -44,24 +44,29 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isLoading, setIsLoading] = useState(true);
   const [currentFormId, setCurrentFormId] = useState<string | null>(editingFormId || null);
+  const [savedFormId, setSavedFormId] = useState<string | null>(null);
 
   const totalSteps = 10;
 
   // Load form data when component mounts
   useEffect(() => {
     const loadSavedData = async () => {
-      if (user) {
-        const { formData: savedData, formId } = await loadFormData(editingFormId);
-        if (savedData) {
-          setFormData(savedData);
-          setCurrentFormId(formId);
+      if (editingFormId) {
+        try {
+          const savedFormResponse = await loadFormData(editingFormId);
+          if (savedFormResponse) {
+            setFormData(savedFormResponse.formData);
+            setCurrentFormId(savedFormResponse.id);
+          }
+        } catch (error) {
+          console.error('Error loading form data:', error);
         }
       }
       setIsLoading(false);
     };
 
     loadSavedData();
-  }, [user, editingFormId]);
+  }, [editingFormId]);
 
   const validateStep = (step: number): boolean => {
     const newErrors: Partial<FormData> = {};
@@ -121,10 +126,8 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
   const nextStep = () => {
     if (validateStep(currentStep)) {
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
-      // Auto-save progress for logged-in users
-      if (user) {
-        saveFormData(formData, false, currentFormId || undefined);
-      }
+      // Auto-save progress
+      handleSaveProgress();
     }
   };
 
@@ -145,11 +148,10 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
   };
 
   const handleSaveProgress = async () => {
-    if (user) {
-      const savedId = await saveFormData(formData, false, currentFormId || undefined);
-      if (savedId && !currentFormId) {
-        setCurrentFormId(savedId);
-      }
+    const result = await saveFormData(formData, false, currentFormId || undefined);
+    if (result && result.id && !currentFormId) {
+      setCurrentFormId(result.id);
+      setSavedFormId(result.id);
     }
   };
 
@@ -178,9 +180,9 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
         yPosition = 30;
       }
       
-      doc.setFont(undefined, 'bold');
+      doc.setFontSize(14);
       doc.text(title, 20, yPosition);
-      doc.setFont(undefined, 'normal');
+      doc.setFontSize(12);
       const splitText = doc.splitTextToSize(content, 170);
       doc.text(splitText, 20, yPosition + 10);
       yPosition += splitText.length * 5 + 20;
