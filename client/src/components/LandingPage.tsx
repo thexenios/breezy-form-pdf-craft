@@ -24,25 +24,27 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
             <FileText className="w-8 h-8 text-[#c65d21]" />
             <span className="text-xl font-bold">Communication Guide</span>
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             {user ? (
               <>
                 <Button
                   onClick={onShowProfile}
                   variant="outline"
-                  className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+                  className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors text-sm md:text-base px-3 md:px-4"
                 >
-                  <UserCircle className="w-4 h-4 mr-2" />
-                  My Profile
+                  <UserCircle className="w-4 h-4 mr-1 md:mr-2" />
+                  <span className="hidden sm:inline">My Profile</span>
+                  <span className="sm:hidden">Profile</span>
                 </Button>
               </>
             ) : (
               <Button
                 onClick={() => setShowAuthDialog(true)}
                 variant="outline"
-                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors text-sm md:text-base px-3 md:px-4"
               >
-                Sign Up / Sign In
+                <span className="hidden sm:inline">Sign Up / Sign In</span>
+                <span className="sm:hidden">Sign In</span>
               </Button>
             )}
           </div>
@@ -99,7 +101,7 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
       </section>
 
       {/* Features Section */}
-      <section className="px-4 py-20 bg-gray-900/30">
+      <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
@@ -204,7 +206,7 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
       </section>
 
       {/* CTA Section */}
-      <section className="px-4 py-20 bg-gradient-to-r from-[#c65d21]/10 to-[#e67e22]/10">
+      <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
             Ready to Define Your Voice?
@@ -225,7 +227,7 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
       </section>
 
       {/* Footer */}
-      <footer className="px-4 py-8 bg-gray-900">
+      <footer className="px-4 py-8 bg-[#1a1a1a]">
         <div className="max-w-7xl mx-auto text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <FileText className="w-6 h-6 text-[#c65d21]" />
@@ -240,7 +242,6 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
       <AuthDialog 
         isOpen={showAuthDialog} 
         onClose={() => setShowAuthDialog(false)}
-        onSuccess={() => setShowAuthDialog(false)}
       />
     </div>
   );
