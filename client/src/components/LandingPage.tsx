@@ -161,7 +161,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       <section className="px-4 py-20 bg-[#1a1a1a]">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#c65d21]">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-[#d9d9d9]">
               Everything You Need to Define Your Voice
             </h2>
             <p className="text-lg text-gray-300 max-w-2xl mx-auto">
