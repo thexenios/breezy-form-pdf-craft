@@ -61,9 +61,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
       {/* Hero Section */}
       <section className="px-4 py-20">
         <div className="max-w-4xl mx-auto text-center">
-          <Badge variant="outline" className="mb-6 border-[#c65d21] text-[#c65d21] bg-[#c65d21]/10">
-            ✨ Free Communication Guide Builder
-          </Badge>
+          
           
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
             Define Your Voice.<br />
