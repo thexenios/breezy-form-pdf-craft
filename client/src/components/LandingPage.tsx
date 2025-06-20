@@ -9,9 +9,10 @@ import AuthDialog from '@/components/AuthDialog';
 interface LandingPageProps {
   onStartForm: () => void;
   onShowProfile: () => void;
+  onShowAbout: () => void;
 }
 
-const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
+const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPageProps) => {
   const { user } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
 
@@ -25,6 +26,13 @@ const LandingPage = ({ onStartForm, onShowProfile }: LandingPageProps) => {
             <span className="text-xl font-bold">Communication Guide</span>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
+            <Button
+              onClick={onShowAbout}
+              variant="ghost"
+              className="text-white hover:text-[#c65d21] transition-colors text-sm md:text-base px-3 md:px-4"
+            >
+              About
+            </Button>
             {user ? (
               <>
                 <Button

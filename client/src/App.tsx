@@ -5,9 +5,10 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import LandingPage from '@/components/LandingPage';
 import MultiStepForm from '@/components/MultiStepForm';
 import Profile from '@/components/Profile';
+import About from '@/pages/About';
 import './App.css';
 
-type AppState = 'landing' | 'form' | 'profile';
+type AppState = 'landing' | 'form' | 'profile' | 'about';
 
 function App() {
   const [currentView, setCurrentView] = useState<AppState>('landing');
@@ -37,6 +38,10 @@ function App() {
     setCurrentView('profile');
   };
 
+  const handleShowAbout = () => {
+    setCurrentView('about');
+  };
+
   return (
     <AuthProvider>
       <div className="min-h-screen">
@@ -44,6 +49,7 @@ function App() {
           <LandingPage 
             onStartForm={handleStartForm}
             onShowProfile={handleShowProfile}
+            onShowAbout={handleShowAbout}
           />
         )}
         {currentView === 'form' && (
@@ -58,6 +64,11 @@ function App() {
             onEditForm={handleEditForm}
             onCreateForm={handleStartForm}
             onBackToLanding={handleBackToLanding}
+          />
+        )}
+        {currentView === 'about' && (
+          <About 
+            onBack={handleBackToLanding}
           />
         )}
         <Toaster />
