@@ -6,18 +6,20 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useAuth } from '@/contexts/AuthContext';
 import { useFormPersistence } from '@/hooks/useFormPersistence';
 import { Plus, Edit, Trash2, FileText, Calendar, CheckCircle, Circle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { apiRequest } from '@/lib/queryClient';
 
 interface FormResponse {
   id: string;
   title: string;
-  form_data: any;
+  formData: any;
   completed: boolean;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
 }
 
 interface ProfileProps {
@@ -27,40 +29,38 @@ interface ProfileProps {
 }
 
 const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) => {
-  const { user, signOut } = useAuth();
-  const { getUserForms, deleteForm, saveFormData } = useFormPersistence();
+  const { deleteFormData, saveFormData } = useFormPersistence();
   const { toast } = useToast();
-  const [forms, setForms] = useState<FormResponse[]>([]);
-  const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
   const [editingTitle, setEditingTitle] = useState<{ id: string; title: string } | null>(null);
 
-  useEffect(() => {
-    loadUserForms();
-  }, []);
+  const getCurrentUserId = () => "demo-user-id";
 
-  const loadUserForms = async () => {
-    setLoading(true);
-    const userForms = await getUserForms();
-    setForms(userForms);
-    setLoading(false);
-  };
+  // Query for user forms
+  const { data: forms = [], isLoading: loading } = useQuery({
+    queryKey: ['/api/form-responses', getCurrentUserId()],
+    queryFn: () => apiRequest(`/api/form-responses/${getCurrentUserId()}`),
+  });
+
+  // Delete mutation
+  const deleteMutation = useMutation({
+    mutationFn: (formId: string) => deleteFormData(formId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/form-responses', getCurrentUserId()] });
+    },
+  });
 
   const handleDeleteForm = async (formId: string) => {
-    const success = await deleteForm(formId);
-    if (success) {
-      setForms(forms.filter(form => form.id !== formId));
-    }
+    deleteMutation.mutate(formId);
   };
 
   const handleSaveTitle = async (formId: string, newTitle: string) => {
-    const form = forms.find(f => f.id === formId);
+    const form = forms.find((f: FormResponse) => f.id === formId);
     if (!form) return;
 
-    const success = await saveFormData(form.form_data, form.completed, formId, newTitle);
+    const success = await saveFormData(form.formData, form.completed, formId, newTitle);
     if (success) {
-      setForms(forms.map(f => 
-        f.id === formId ? { ...f, title: newTitle, updated_at: new Date().toISOString() } : f
-      ));
+      queryClient.invalidateQueries({ queryKey: ['/api/form-responses', getCurrentUserId()] });
       setEditingTitle(null);
       toast({
         title: "Title updated",
@@ -94,7 +94,7 @@ const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) =>
         <div className="flex justify-between items-center mb-8">
           <div>
             <h1 className="text-3xl font-bold text-white mb-2">My Communication Guides</h1>
-            <p className="text-gray-400">Welcome back, {user?.email}</p>
+            <p className="text-gray-400">Welcome back, demo user</p>
           </div>
           <div className="flex gap-4">
             <Button
@@ -103,13 +103,6 @@ const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) =>
               className="bg-[#1a1a1a] border-gray-600 text-gray-300 hover:bg-gray-800"
             >
               Back to Home
-            </Button>
-            <Button
-              onClick={signOut}
-              variant="outline"
-              className="bg-[#1a1a1a] border-gray-600 text-gray-300 hover:bg-gray-800"
-            >
-              Sign Out
             </Button>
           </div>
         </div>
@@ -145,7 +138,7 @@ const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) =>
           </Card>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {forms.map((form) => (
+            {forms.map((form: FormResponse) => (
               <Card key={form.id} className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
@@ -153,12 +146,12 @@ const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) =>
                       {editingTitle?.id === form.id ? (
                         <div className="space-y-2">
                           <Input
-                            value={editingTitle.title}
-                            onChange={(e) => setEditingTitle({ ...editingTitle, title: e.target.value })}
+                            value={editingTitle?.title || ''}
+                            onChange={(e) => editingTitle && setEditingTitle({ ...editingTitle, title: e.target.value })}
                             className="bg-gray-700 border-gray-600 text-white"
-                            onBlur={() => handleSaveTitle(form.id, editingTitle.title)}
+                            onBlur={() => editingTitle && handleSaveTitle(form.id, editingTitle.title)}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter') {
+                              if (e.key === 'Enter' && editingTitle) {
                                 handleSaveTitle(form.id, editingTitle.title);
                               } else if (e.key === 'Escape') {
                                 setEditingTitle(null);
@@ -191,7 +184,7 @@ const Profile = ({ onEditForm, onCreateForm, onBackToLanding }: ProfileProps) =>
                   </div>
                   <CardDescription className="text-gray-400 flex items-center">
                     <Calendar className="w-3 h-3 mr-1" />
-                    Updated {formatDate(form.updated_at)}
+                    Updated {formatDate(form.updatedAt)}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">

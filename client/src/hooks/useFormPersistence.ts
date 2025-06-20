@@ -1,8 +1,6 @@
-
-import { useState, useEffect } from 'react';
-import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
+import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 
 interface FormData {
   vision: string;
@@ -19,126 +17,100 @@ interface FormData {
 interface FormResponse {
   id: string;
   title: string;
-  form_data: FormData;
+  formData: FormData;
   completed: boolean;
-  created_at: string;
-  updated_at: string;
+  createdAt: string;
+  updatedAt: string;
+  userId: string;
 }
 
 export const useFormPersistence = () => {
-  const { user } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  // For now, we'll use a static user ID until authentication is properly implemented
+  const getCurrentUserId = () => "demo-user-id";
+
   const saveFormData = async (formData: FormData, completed: boolean = false, formId?: string, title?: string) => {
-    if (!user) return null;
-
-    try {
-      if (formId) {
-        // Update existing form
-        const updateData: any = {
-          form_data: formData,
-          completed,
-          updated_at: new Date().toISOString()
-        };
-        
-        if (title) {
-          updateData.title = title;
-        }
-
-        const { error } = await supabase
-          .from('form_responses')
-          .update(updateData)
-          .eq('id', formId)
-          .eq('user_id', user.id);
-
-        if (error) throw error;
-        return formId;
-      } else {
-        // Create new form
-        const { data, error } = await supabase
-          .from('form_responses')
-          .insert({
-            user_id: user.id,
-            form_data: formData as any,
-            completed,
-            title: title || 'Untitled Form'
-          })
-          .select('id')
-          .single();
-
-        if (error) throw error;
-        return data?.id || null;
-      }
-    } catch (error) {
-      console.error('Error saving form:', error);
+    const userId = getCurrentUserId();
+    if (!userId) {
       toast({
-        title: "Save failed",
-        description: "Failed to save your progress. Please try again.",
+        title: "Authentication required",
+        description: "Please sign in to save your form.",
         variant: "destructive",
       });
       return null;
     }
+
+    setIsLoading(true);
+    try {
+      let result;
+      if (formId) {
+        // Update existing form
+        result = await apiRequest(`/api/form-responses/${formId}`, {
+          method: 'PUT',
+          body: JSON.stringify({
+            formData,
+            completed,
+            title: title || 'My Communication Guide',
+          }),
+        });
+      } else {
+        // Create new form
+        result = await apiRequest('/api/form-responses', {
+          method: 'POST',
+          body: JSON.stringify({
+            userId,
+            formData,
+            completed,
+            title: title || 'My Communication Guide',
+          }),
+        });
+      }
+
+      toast({
+        title: completed ? "Form completed!" : "Progress saved",
+        description: completed ? "Your communication guide has been completed and saved." : "Your progress has been saved successfully.",
+      });
+
+      return result;
+    } catch (error) {
+      console.error('Error saving form:', error);
+      toast({
+        title: "Save failed",
+        description: "There was an error saving your form. Please try again.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const loadFormData = async (formId?: string): Promise<{ formData: FormData | null; formId: string | null }> => {
-    if (!user) return { formData: null, formId: null };
-
+  const loadFormData = async (formId: string): Promise<FormResponse | null> => {
+    setIsLoading(true);
     try {
-      let query = supabase
-        .from('form_responses')
-        .select('*')
-        .eq('user_id', user.id);
-
-      if (formId) {
-        query = query.eq('id', formId);
-      } else {
-        query = query.order('updated_at', { ascending: false }).limit(1);
-      }
-
-      const { data, error } = await query.maybeSingle();
-
-      if (error) throw error;
-
-      if (data) {
-        return { formData: data.form_data as unknown as FormData, formId: data.id };
-      }
-
-      return { formData: null, formId: null };
+      const data = await apiRequest(`/api/form-responses/single/${formId}`);
+      return data;
     } catch (error) {
       console.error('Error loading form:', error);
-      return { formData: null, formId: null };
+      toast({
+        title: "Load failed",
+        description: "There was an error loading your form. Please try again.",
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const getUserForms = async (): Promise<FormResponse[]> => {
-    if (!user) return [];
-
+  const deleteFormData = async (formId: string): Promise<boolean> => {
+    setIsLoading(true);
     try {
-      const { data, error } = await supabase
-        .from('form_responses')
-        .select('*')
-        .eq('user_id', user.id)
-        .order('updated_at', { ascending: false });
-
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      console.error('Error loading user forms:', error);
-      return [];
-    }
-  };
-
-  const deleteForm = async (formId: string): Promise<boolean> => {
-    if (!user) return false;
-
-    try {
-      const { error } = await supabase
-        .from('form_responses')
-        .delete()
-        .eq('id', formId)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
+      await apiRequest(`/api/form-responses/${formId}`, {
+        method: 'DELETE',
+      });
 
       toast({
         title: "Form deleted",
@@ -150,17 +122,19 @@ export const useFormPersistence = () => {
       console.error('Error deleting form:', error);
       toast({
         title: "Delete failed",
-        description: "Failed to delete the form. Please try again.",
+        description: "There was an error deleting your form. Please try again.",
         variant: "destructive",
       });
       return false;
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return {
     saveFormData,
     loadFormData,
-    getUserForms,
-    deleteForm
+    deleteFormData,
+    isLoading
   };
 };
