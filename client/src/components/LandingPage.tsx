@@ -23,7 +23,6 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <FileText className="w-8 h-8 text-[#385f8e]" />
-            <span className="text-xl font-bold">Communication Guide</span>
           </div>
           <div className="flex items-center space-x-2 md:space-x-4">
             <Button
