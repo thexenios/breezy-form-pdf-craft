@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { FileText, CheckCircle, User, UserCircle } from 'lucide-react';
+import { FileText, CheckCircle, User, UserCircle, Menu, X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import AuthDialog from '@/components/AuthDialog';
 
@@ -15,47 +15,101 @@ interface LandingPageProps {
 const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPageProps) => {
   const { user } = useAuth();
   const [showAuthDialog, setShowAuthDialog] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#1a1a1a] text-white">
       {/* Header */}
-      <header className="px-4 py-6">
+      <header className="px-4 py-6 relative">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <FileText className="w-8 h-8 text-[#385f8e]" />
+            <span className="text-xl font-bold">Communication Guide</span>
           </div>
-          <div className="flex items-center space-x-2 md:space-x-4">
+          
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-4">
             <Button
               onClick={onShowAbout}
               variant="ghost"
-              className="text-white hover:text-[#c65d21] transition-colors text-sm md:text-base px-3 md:px-4"
+              className="text-white hover:text-[#c65d21] transition-colors"
             >
               About
             </Button>
             {user ? (
-              <>
-                <Button
-                  onClick={onShowProfile}
-                  variant="outline"
-                  className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors text-sm md:text-base px-3 md:px-4"
-                >
-                  <UserCircle className="w-4 h-4 mr-1 md:mr-2" />
-                  <span className="hidden sm:inline">My Profile</span>
-                  <span className="sm:hidden">Profile</span>
-                </Button>
-              </>
+              <Button
+                onClick={onShowProfile}
+                variant="outline"
+                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
+              >
+                <UserCircle className="w-4 h-4 mr-2" />
+                My Profile
+              </Button>
             ) : (
               <Button
                 onClick={() => setShowAuthDialog(true)}
                 variant="outline"
-                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors text-sm md:text-base px-3 md:px-4"
+                className="bg-transparent border-[#c65d21] text-[#c65d21] hover:bg-[#c65d21] hover:text-white transition-colors"
               >
-                <span className="hidden sm:inline">Sign Up / Sign In</span>
-                <span className="sm:hidden">Sign In</span>
+                Sign Up / Sign In
               </Button>
             )}
           </div>
+
+          {/* Mobile Navigation */}
+          <div className="md:hidden">
+            <Button
+              onClick={() => setShowMobileMenu(!showMobileMenu)}
+              variant="ghost"
+              size="sm"
+              className="text-white hover:text-[#c65d21] transition-colors"
+            >
+              {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </Button>
+          </div>
         </div>
+
+        {/* Mobile Menu Overlay */}
+        {showMobileMenu && (
+          <div className="md:hidden absolute top-full left-0 right-0 bg-[#1a1a1a] border-t border-gray-800 shadow-lg z-50">
+            <div className="px-4 py-4 space-y-2">
+              <Button
+                onClick={() => {
+                  onShowAbout();
+                  setShowMobileMenu(false);
+                }}
+                variant="ghost"
+                className="w-full text-left justify-start text-white hover:text-[#c65d21] transition-colors"
+              >
+                About
+              </Button>
+              {user ? (
+                <Button
+                  onClick={() => {
+                    onShowProfile();
+                    setShowMobileMenu(false);
+                  }}
+                  variant="ghost"
+                  className="w-full text-left justify-start text-white hover:text-[#c65d21] transition-colors"
+                >
+                  <UserCircle className="w-4 h-4 mr-2" />
+                  My Profile
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    setShowAuthDialog(true);
+                    setShowMobileMenu(false);
+                  }}
+                  variant="ghost"
+                  className="w-full text-left justify-start text-white hover:text-[#c65d21] transition-colors"
+                >
+                  Sign Up / Sign In
+                </Button>
+              )}
+            </div>
+          </div>
+        )}
       </header>
       {/* Hero Section */}
       <section className="px-4 py-20">
