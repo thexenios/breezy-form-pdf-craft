@@ -93,7 +93,7 @@ const LandingPage = ({ onStartForm, onShowProfile, onShowAbout }: LandingPagePro
                 onClick={onShowProfile}
                 size="lg"
                 variant="outline"
-                className="bg-transparent border-2 border-gray-600 text-white hover:bg-gray-700 hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
+                className="bg-transparent border-2 border-[#1a1a1a] text-white hover:bg-gray-700 hover:text-white px-8 py-4 text-lg font-semibold rounded-xl transition-all duration-300"
               >
                 <User className="w-5 h-5 mr-2" />
                 View My Guides
