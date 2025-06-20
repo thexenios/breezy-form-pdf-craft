@@ -113,6 +113,11 @@ Changelog:
   - Added React Query for data fetching and caching
   - Fixed authentication context for development environment
   - Resolved background color and form creation issues
+- June 20, 2025. Enhanced About page and PDF generation:
+  - Added About page with Chris's personal communication framework image
+  - Redesigned PDF export to match visual style of uploaded "Get to Know Me" image
+  - Updated About page navigation to match landing page header
+  - Made "Communication Guide" branding clickable for navigation consistency
 
 ## User Preferences
 
