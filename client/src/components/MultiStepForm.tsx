@@ -158,45 +158,128 @@ const MultiStepForm = ({ onBackToLanding, onBackToProfile, editingFormId }: Mult
   const generatePDF = async () => {
     const doc = new jsPDF();
     
-    // Add title
-    doc.setFontSize(24);
-    doc.setTextColor(198, 93, 33);
-    doc.text('Your Personal Communication Guide', 20, 30);
+    // Set up colors
+    const orangeColor = [198, 93, 33]; // Orange color from your design
+    const whiteColor = [255, 255, 255];
+    const grayColor = [180, 180, 180];
+    const darkBlueColor = [52, 73, 94]; // Dark blue similar to your background
     
-    // Add current date
-    doc.setFontSize(12);
-    doc.setTextColor(100, 100, 100);
-    doc.text(`Created on: ${new Date().toLocaleDateString()}`, 20, 45);
+    // Create gradient-like background effect
+    doc.setFillColor(65, 105, 145); // Blue background color
+    doc.rect(0, 0, 210, 297, 'F'); // Fill entire page
     
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0);
+    // Add main title "Get to KNOW ME" style
+    doc.setFontSize(36);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...whiteColor);
+    doc.text('Get to', 20, 40);
     
-    let yPosition = 70;
+    doc.setFontSize(48);
+    doc.setTextColor(...orangeColor);
+    doc.text('KNOW ME', 20, 65);
     
-    const addSection = (title: string, content: string) => {
-      // Check if we need a new page
-      if (yPosition > 250) {
-        doc.addPage();
-        yPosition = 30;
-      }
-      
+    // Add date in corner
+    doc.setFontSize(10);
+    doc.setTextColor(...grayColor);
+    doc.text(`Created: ${new Date().toLocaleDateString()}`, 150, 20);
+    
+    let yPosition = 90;
+    
+    // Main sections in left column style
+    const addMainSection = (title: string, content: string, yPos: number) => {
+      // Orange title
       doc.setFontSize(14);
-      doc.text(title, 20, yPosition);
-      doc.setFontSize(12);
-      const splitText = doc.splitTextToSize(content, 170);
-      doc.text(splitText, 20, yPosition + 10);
-      yPosition += splitText.length * 5 + 20;
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...orangeColor);
+      doc.text(`${title}:`, 20, yPos);
+      
+      // White content
+      doc.setFontSize(11);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...whiteColor);
+      const splitText = doc.splitTextToSize(content, 85); // Narrower column like your design
+      doc.text(splitText, 20, yPos + 8);
+      
+      return yPos + splitText.length * 4 + 20;
     };
     
-    addSection('Your Vision:', formData.vision);
-    addSection('Your Mission:', formData.mission);
-    addSection('Your Why:', formData.why);
-    addSection('Your Core Values:', formData.values);
-    addSection('Your Values in Action:', formData.valuesInAction);
-    addSection('Your Anti-Values:', formData.antiValues);
-    addSection('Your Voice:', formData.voice);
-    addSection('A Phrase That Sounds Like You:', formData.phraseSound);
-    addSection('Your Anti-Voice:', formData.antiVoice);
+    // Add North Star section
+    yPosition = addMainSection('My North Star', formData.vision, yPosition);
+    
+    // Add Mission section  
+    yPosition = addMainSection('My Mission', formData.mission, yPosition);
+    
+    // Add Why section
+    yPosition = addMainSection('My Why', formData.why, yPosition);
+    
+    // Add Tone section (combining voice elements)
+    const toneContent = `${formData.voice}\n\nPhrase that sounds like me: ${formData.phraseSound}`;
+    yPosition = addMainSection('My Tone', toneContent, yPosition);
+    
+    // Values section at bottom with pillars style
+    if (yPosition > 220) {
+      doc.addPage();
+      doc.setFillColor(65, 105, 145);
+      doc.rect(0, 0, 210, 297, 'F');
+      yPosition = 30;
+    }
+    
+    // Core Values title
+    doc.setFontSize(16);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(...orangeColor);
+    doc.text('Core Values', 20, yPosition);
+    yPosition += 20;
+    
+    // Parse values and create pillar-like display
+    const values = formData.values.split(',').map(v => v.trim()).filter(v => v);
+    const pillarsPerRow = 3;
+    const pillarWidth = 50;
+    const pillarSpacing = 60;
+    
+    values.forEach((value, index) => {
+      const row = Math.floor(index / pillarsPerRow);
+      const col = index % pillarsPerRow;
+      const x = 20 + (col * pillarSpacing);
+      const y = yPosition + (row * 40);
+      
+      // Draw simple pillar representation
+      doc.setFillColor(...orangeColor);
+      doc.rect(x + 15, y + 15, 20, 8, 'F'); // Top of pillar
+      
+      doc.setFillColor(...grayColor);
+      doc.rect(x + 17, y + 23, 16, 2, 'F'); // Pillar lines
+      doc.rect(x + 17, y + 25, 16, 2, 'F');
+      doc.rect(x + 17, y + 27, 16, 2, 'F');
+      
+      // Value name below pillar
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'bold');
+      doc.setTextColor(...orangeColor);
+      const textWidth = doc.getTextWidth(value);
+      doc.text(value, x + 25 - (textWidth / 2), y + 35);
+    });
+    
+    // Add additional sections on second page if needed
+    if (formData.valuesInAction || formData.antiValues || formData.antiVoice) {
+      doc.addPage();
+      doc.setFillColor(65, 105, 145);
+      doc.rect(0, 0, 210, 297, 'F');
+      
+      let page2Y = 30;
+      
+      if (formData.valuesInAction) {
+        page2Y = addMainSection('Values in Action', formData.valuesInAction, page2Y);
+      }
+      
+      if (formData.antiValues) {
+        page2Y = addMainSection('Anti-Values', formData.antiValues, page2Y);
+      }
+      
+      if (formData.antiVoice) {
+        page2Y = addMainSection('Anti-Voice', formData.antiVoice, page2Y);
+      }
+    }
     
     // Save as completed if user is logged in
     if (user) {
